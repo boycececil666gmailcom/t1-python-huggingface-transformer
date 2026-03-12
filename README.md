@@ -13,6 +13,7 @@ t1-python-huggingface-transformer/
 ├── fine_tune.py        # Fine-tune BERT-base-uncased on IMDb via Trainer API
 ├── inference.py        # Load a saved model and classify text (--text or --file)
 ├── custom_dataset.py   # Utility to load CSV/JSON datasets as DatasetDict
+├── image_gen.py        # Stable Diffusion txt2img, img2img, inpainting
 ├── requirements.txt
 └── data/               # Place your own CSV/JSON datasets here
     └── .gitkeep
@@ -50,6 +51,21 @@ Requires ~6 GB VRAM for full batch; reduce `--batch_size` for CPU runs.
 python fine_tune.py --epochs 3 --batch_size 16 --output_dir ./output/bert-imdb
 ```
 
+### 5 — Generate images with Stable Diffusion
+
+```bash
+# Text to image
+python image_gen.py txt2img --prompt "a photo of an astronaut riding a horse on mars" --steps 30
+
+# Image to image
+python image_gen.py img2img --prompt "convert to oil painting" --image input.png
+
+# Inpainting (fill masked region)
+python image_gen.py inpaint --prompt "a white cat" --image input.png --mask mask.png
+```
+
+Outputs are saved to `output/images/`. Model weights download automatically on first run but are gitignored.
+
 ### 4 — Run inference on a saved model
 
 ```bash
@@ -73,6 +89,7 @@ You can also point `--model_dir` at any Hugging Face Hub model ID (e.g. `distilb
 | `fine_tune.py` | `AutoModelForSequenceClassification` + `Trainer` workflow |
 | `inference.py` | `torch.no_grad()` batched inference, CPU/GPU auto-selection |
 | `custom_dataset.py` | `load_dataset()` with custom files, `ClassLabel` casting |
+| `image_gen.py` | Stable Diffusion txt2img / img2img / inpainting via `diffusers` |
 
 ---
 

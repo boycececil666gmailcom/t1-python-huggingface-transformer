@@ -22,6 +22,16 @@ output/
 checkpoints/
 runs/
 
+# Model weight files (never commit large binary weights)
+*.bin
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.pkl
+*.h5
+
 # Hugging Face cache
 .cache/
 
