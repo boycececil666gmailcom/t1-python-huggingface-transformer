@@ -15,8 +15,11 @@ t1-python-huggingface-transformer/
 ├── custom_dataset.py   # Utility to load CSV/JSON datasets as DatasetDict
 ├── image_gen.py        # Stable Diffusion txt2img, img2img, inpainting
 ├── requirements.txt
-└── data/               # Place your own CSV/JSON datasets here
-    └── .gitkeep
+├── data/               # Place your own CSV/JSON datasets here
+│   └── .gitkeep
+└── loras/
+    └── retro_pixel/
+        └── retro_pixel_flux.py   # FLUX.1-dev + Retro-Pixel-Flux-LoRA text-to-image
 ```
 
 ---
@@ -65,6 +68,35 @@ python image_gen.py inpaint --prompt "a white cat" --image input.png --mask mask
 ```
 
 Outputs are saved to `output/images/`. Model weights download automatically on first run but are gitignored.
+
+### 6 — Retro-Pixel-Flux-LoRA (FLUX.1-dev)
+
+Generates retro pixel-art style images using [prithivMLmods/Retro-Pixel-Flux-LoRA](https://huggingface.co/prithivMLmods/Retro-Pixel-Flux-LoRA) on top of `black-forest-labs/FLUX.1-dev`.
+
+**Prerequisites:**
+- NVIDIA GPU with ≥12 GB VRAM recommended (FLUX.1-dev is large)
+- HuggingFace account with access to the gated FLUX.1-dev model:
+  ```bash
+  huggingface-cli login
+  ```
+
+```bash
+python loras/retro_pixel/retro_pixel_flux.py \
+    --prompt "Retro Pixel, A pixelated german shepherd dog on a light green background." \
+    --steps 28 \
+    --seed 42
+```
+
+The trigger word `Retro Pixel` is prepended automatically if you forget it. Outputs save to `output/loras/retro_pixel/`. Best at `1024×1024` (default).
+
+| Argument | Default | Description |
+|---|---|---|
+| `--prompt` | required | Text prompt |
+| `--steps` | 28 | Inference steps |
+| `--guidance_scale` | 3.5 | CFG scale (FLUX uses ~3.5) |
+| `--width` / `--height` | 1024 | Output dimensions |
+| `--seed` | None | Reproducibility seed |
+| `--output_dir` | `output/loras/retro_pixel` | Where to save |
 
 ### 4 — Run inference on a saved model
 
